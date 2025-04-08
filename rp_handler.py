@@ -4,9 +4,10 @@ import tempfile
 import os
 import base64
 import librosa
+import runpod
+
 
 # Load model globally for reuse across invocations
-# Replace "your-username/your-model-name" with your actual model path
 MODEL_ID = "Lingua-Connect/whisper-small-sw-bible"
 processor = WhisperProcessor.from_pretrained(MODEL_ID)
 model = WhisperForConditionalGeneration.from_pretrained(MODEL_ID)
@@ -49,3 +50,7 @@ def handler(event):
     
     except Exception as e:
         return {"success": False, "error": str(e)}
+    
+
+if __name__ == '__main__':
+    runpod.serverless.start({'handler': handler})

@@ -7,18 +7,17 @@ RUN apt-get update && apt-get install -y ffmpeg git
 RUN pip install transformers datasets librosa soundfile scipy fastapi uvicorn python-multipart
 
 # Set up working directory
-WORKDIR /app
+WORKDIR /
 
-# Copy your application code
-COPY handler.py /app/
-COPY serverless_handler.py /app/
+RUN pip install --no-cache-dir runpod
+# Copy the application code to the working directory
+COPY rp_handler.py /
 
 # Pre-download the model (optional but speeds up cold starts)
-# Replace "your-username/your-model-name" with your actual model
 RUN python -c "from transformers import WhisperProcessor, WhisperForConditionalGeneration; \
     processor = WhisperProcessor.from_pretrained('Lingua-Connect/whisper-small-sw-bible'); \
     model = WhisperForConditionalGeneration.from_pretrained('Lingua-Connect/whisper-small-sw-bible')"
 
 EXPOSE 8000
 
-CMD ["python", "serverless_handler.py"]
+CMD ["python3", "-u", "rp_handler.py"]
