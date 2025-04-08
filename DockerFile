@@ -12,11 +12,13 @@ WORKDIR /
 RUN pip install --no-cache-dir runpod
 # Copy the application code to the working directory
 COPY rp_handler.py /
+COPY load_model.py /
 
-# Pre-download the model (optional but speeds up cold starts)
-RUN python -c "from transformers import WhisperProcessor, WhisperForConditionalGeneration; \
-    processor = WhisperProcessor.from_pretrained('Lingua-Connect/whisper-small-sw-bible'); \
-    model = WhisperForConditionalGeneration.from_pretrained('Lingua-Connect/whisper-small-sw-bible')"
+RUN python /load_model.py
+# # Pre-download the model (optional but speeds up cold starts)
+# RUN python -c "from transformers import WhisperProcessor, WhisperForConditionalGeneration; \
+#     processor = WhisperProcessor.from_pretrained('Lingua-Connect/whisper-small-sw-bible'); \
+#     model = WhisperForConditionalGeneration.from_pretrained('Lingua-Connect/whisper-small-sw-bible')"
 
 EXPOSE 8000
 
